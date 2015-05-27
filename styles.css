@@ -1,0 +1,33 @@
+/*
+Salmon: #EA6045;
+Tan: #F8CA4D;
+Beige: #F5E5C0;
+Teal: #3F5666;
+Blue: #2F3440;
+*/
+
+body {
+  text-align: center;
+  font-family: Handlee, sans-serif;
+  background-color: #F5E5C0;}
+
+h1 {
+  height: 50px;
+  background-color: #EA6045;}
+
+h2 {
+  color: #F5E5C0;
+  background-color: #3F5666;}
+
+h3 {
+  background-color: #F8CA4D;
+}
+
+.win {
+  border: 10px solid;
+  border-color: #EA6045;
+}
+
+.click:hover {
+  cursor: pointer;
+}
