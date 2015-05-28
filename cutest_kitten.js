@@ -1,20 +1,18 @@
 $(function() {
 
+  var kittens = [];
+  var kittenLinks;
+
   var Photo = function () {
     this.votes = 0;
-  }
-
-  var kittens = [];
-
-  for (var i = 0; i < 14; i++) {
-    kittens.push(new Photo(i));
   }
 
   var tracker = {
     choice1: "",
     choice2: "",
+
     generateRandom: function() {
-      return Math.floor(Math.random() * 14);
+      return Math.floor(Math.random() * kittenLinks.length);
     },
 
     selectKittens: function() {
@@ -26,10 +24,10 @@ $(function() {
       }
 
       $("img#choice1").attr("src", function() {
-        return "images/" + tracker.choice1 + ".jpg";
+        return kittenLinks[tracker.choice1].link;
       })
       $("img#choice2").attr("src", function() {
-        return "images/" + tracker.choice2 + ".jpg";
+        return kittenLinks[tracker.choice2].link;
       })
     },
 
@@ -56,8 +54,28 @@ $(function() {
     }
   }
 
-  tracker.selectKittens();
+  var loadImages = function() {
+    $.ajax({
+      url: "https://api.imgur.com/3/album/9r2Cn",
+      headers: {
+        Authorization: "Client-ID 990751fa0cd55cc"
+      }
+    })
+      .done(function(data) {
+        kittenLinks = data.data.images;
+
+        for (var i = 0; i < kittenLinks.length; i++) {
+          kittens.push(new Photo(i));
+        }
+
+        tracker.selectKittens();
+      })
+  }
+
+  loadImages();
   tracker.addWin();
   tracker.newVote();
+
+  console.log();
 
 });
