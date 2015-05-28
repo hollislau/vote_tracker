@@ -1,9 +1,25 @@
 $(function() {
 
-  var kittens = [];
-  var kittenLinks;
+  $.ajax({
+    url: "https://api.imgur.com/3/album/9r2Cn",
+    headers: {
+      Authorization: "Client-ID 990751fa0cd55cc"
+    }
+  })
+    .done(function(response) {
+      var kittens = [];
+      var kittenImages = response.data.images;
 
-  var Photo = function () {
+      for (var i = 0; i < kittenImages.length; i++) {
+        kittens.push(new Photo(i));
+      }
+
+      tracker.selectKittens(kittenImages);
+      tracker.addWin(kittens);
+      tracker.newVote(kittenImages);
+    })
+
+  function Photo() {
     this.votes = 0;
   }
 
@@ -11,27 +27,27 @@ $(function() {
     choice1: "",
     choice2: "",
 
-    generateRandom: function() {
-      return Math.floor(Math.random() * kittenLinks.length);
+    generateRandom: function(images) {
+      return Math.floor(Math.random() * images.length);
     },
 
-    selectKittens: function() {
-      tracker.choice1 = tracker.generateRandom();
-      tracker.choice2 = tracker.generateRandom();
+    selectKittens: function(images) {
+      tracker.choice1 = tracker.generateRandom(images);
+      tracker.choice2 = tracker.generateRandom(images);
 
       while (tracker.choice1 === tracker.choice2) {
-        tracker.choice2 = tracker.generateRandom();
+        tracker.choice2 = tracker.generateRandom(images);
       }
 
       $("img#choice1").attr("src", function() {
-        return kittenLinks[tracker.choice1].link;
+        return images[tracker.choice1].link;
       })
       $("img#choice2").attr("src", function() {
-        return kittenLinks[tracker.choice2].link;
+        return images[tracker.choice2].link;
       })
     },
 
-    addWin: function() {
+    addWin: function(kittens) {
       $("img").on("click", function() {
         kittens[tracker[this.id]].votes++;
 
@@ -42,9 +58,9 @@ $(function() {
       })
     },
 
-    newVote: function() {
+    newVote: function(images) {
       $("h3#new-vote").on("click", function() {
-        tracker.selectKittens();
+        tracker.selectKittens(images);
 
         $("img.win").removeClass("win");
 
@@ -53,28 +69,6 @@ $(function() {
       })
     }
   }
-
-  var loadImages = function() {
-    $.ajax({
-      url: "https://api.imgur.com/3/album/9r2Cn",
-      headers: {
-        Authorization: "Client-ID 990751fa0cd55cc"
-      }
-    })
-      .done(function(data) {
-        kittenLinks = data.data.images;
-
-        for (var i = 0; i < kittenLinks.length; i++) {
-          kittens.push(new Photo(i));
-        }
-
-        tracker.selectKittens();
-      })
-  }
-
-  loadImages();
-  tracker.addWin();
-  tracker.newVote();
 
   console.log();
 
