@@ -5,7 +5,10 @@ app.set("port", (process.env.PORT || 5000));
 app.use(express.static(__dirname + "/tracker"))
 
 app.get("/secret", function(req, res) {
-  res.send("Kittenz can haz cheezburgerz!");
+  var secret = process.env.SECRET || "Bad kittenz!"
+
+  console.log(secret);
+  res.send(secret);
 })
 
 app.get("/*", function(req, res) {
