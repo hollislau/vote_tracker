@@ -11,7 +11,7 @@ $(function() {
       var kittenImages = response.data.images;
 
       for (var i = 0; i < kittenImages.length; i++) {
-        kittens.push(new Photo(i));
+        kittens.push(new Photo());
       }
 
       tracker.selectKittens(kittenImages);
